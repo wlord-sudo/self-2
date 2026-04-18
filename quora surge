@@ -1,0 +1,8 @@
+#!name=Quora 分流
+#!desc=仅 Quora 网站分流规则
+#!author=OpenAI
+
+[Rule]
+DOMAIN-SUFFIX,quora.com,PROXY
+DOMAIN-SUFFIX,quoracdn.net,PROXY
+DOMAIN-KEYWORD,quora,PROXY
