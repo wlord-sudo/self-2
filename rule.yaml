@@ -304,11 +304,11 @@ proxy-groups:
 - name: 🇲🇴 澳门节点
   type: select
   include-all: true
-  filter: (MO|澳门)
+  filter: (MO|澳门
 - name: 🇪🇺 欧洲节点
   type: select
   include-all: true
-  filter: (TR|Nl|Sk|Ee|Pl|Cz|Be|IT|Pt|ES|HU|DK|LV|CH|FR|UK|DE|NL|SK|EE|PL|CZ|BE|PT|GB|SE|NO|FI|AT|IE|RO|GR|欧洲|欧|英国|德国|法国|荷兰|意大利|西班牙|瑞士|波兰|土耳其|比利时|葡萄牙|捷克|匈牙利|丹麦|瑞典|挪威|芬兰|奥地利|爱尔兰|罗马尼亚|希腊)
+  filter: (AL|AD|AM|AT|AZ|BY|BE|BA|BG|HR|CY|CZ|DK|EE|FI|FR|GE|DE|GR|HU|IS|IE|IT|XK|LV|LI|LT|LU|MT|MD|MC|ME|NL|MK|NO|PL|PT|RO|RU|SM|RS|SK|SI|ES|SE|CH|TR|UA|UK|GB|VA|EU
 - name: 去广告
   type: select
   include-all: true
