@@ -1,59 +1,62 @@
-# Clash Party / Mihomo Rule Providers + manual proxy selection
-# IMPORT AS AN OVERWRITE, not as a standalone node subscription.
-# The '去广告' group is a MANUAL node picker for BY/RU/IS/GF/DK/NO/FI.
-# It is NOT an ad-blocking rule and does not reject any advertisements.
-# No automatic latency checks in proxy-groups. Other settings unchanged.
-# Netflix domain-only; ChinaMedia excluded; retains Europe node group.
+# Clash Party / Mihomo 精简覆写配置
+# 导入“覆写”，并启用规则提供者、规则、代理组这三部分的覆写。
+# 规则来源：ACL4SSR 精简服务列表；Netflix 保留 MetaCubeX 域名 MRS。
+# 与原始大列表相比覆盖范围有所收窄，未单列域名按后续 GEOIP / MATCH 处理。
+# AI 和 YouTube 优先于 Google / Microsoft 通用规则。
+# MR_AIExtra 为原有 AI 规则中保留的补充域名；自动更新列表仍为 http。
+# 所有代理组保留手动选择；“去广告”为原有选节点分组。
+# 欧洲支持国家缩写，另补充卢森堡中文名、Luxembourg、LUX、国旗。
+# 修复原澳门分组正则缺失右括号。
 
 rule-providers:
   MR_Lan:
     type: http
     behavior: classical
     format: text
-    url: https://magicrule.pages.dev/data/_shared/artifacts/Lan_rules_a7096f98ad43c9dc.list
-    path: ./rule-providers/MR_Lan.list
+    url: https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/LocalAreaNetwork.list
+    path: ./rule-providers/lite/MR_Lan.list
     interval: 86400
   MR_Google:
     type: http
     behavior: classical
     format: text
-    url: https://magicrule.pages.dev/data/_shared/artifacts/Google_rules_0804a8c31c599a1e.list
-    path: ./rule-providers/MR_Google.list
+    url: https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Google.list
+    path: ./rule-providers/lite/MR_Google.list
     interval: 86400
   MR_Microsoft:
     type: http
     behavior: classical
     format: text
-    url: https://magicrule.pages.dev/data/_shared/artifacts/Microsoft_rules_7fd3d40967dabeef.list
-    path: ./rule-providers/MR_Microsoft.list
+    url: https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Microsoft.list
+    path: ./rule-providers/lite/MR_Microsoft.list
     interval: 86400
   MR_Apple:
     type: http
     behavior: classical
     format: text
-    url: https://magicrule.pages.dev/data/_shared/artifacts/Apple_rules_50be57f093bd1fff.list
-    path: ./rule-providers/MR_Apple.list
+    url: https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Apple.list
+    path: ./rule-providers/lite/MR_Apple.list
     interval: 86400
   MR_Telegram:
     type: http
     behavior: classical
     format: text
-    url: https://magicrule.pages.dev/data/_shared/artifacts/Telegram_rules_4acef626d1aec7ca.list
-    path: ./rule-providers/MR_Telegram.list
+    url: https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Telegram.list
+    path: ./rule-providers/lite/MR_Telegram.list
     interval: 86400
   MR_GlobalAI:
     type: http
     behavior: classical
     format: text
-    url: https://magicrule.pages.dev/data/_shared/artifacts/GlobalAI_rules_7591fffa97b1e679.list
-    path: ./rule-providers/MR_GlobalAI.list
+    url: https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/AI.list
+    path: ./rule-providers/lite/MR_GlobalAI.list
     interval: 86400
   MR_YouTube:
     type: http
     behavior: classical
     format: text
-    url: https://magicrule.pages.dev/data/_shared/artifacts/YouTube_rules_329ca26de78c21fe.list
-    path: ./rule-providers/MR_YouTube.list
+    url: https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/YouTube.list
+    path: ./rule-providers/lite/MR_YouTube.list
     interval: 86400
   MR_NetflixDomain:
     type: http
@@ -66,22 +69,22 @@ rule-providers:
     type: http
     behavior: classical
     format: text
-    url: https://magicrule.pages.dev/data/_shared/artifacts/BiliBili_rules_2465ea6448cc4fe0.list
-    path: ./rule-providers/MR_BiliBili.list
+    url: https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Bilibili.list
+    path: ./rule-providers/lite/MR_BiliBili.list
     interval: 86400
   MR_Twitter:
     type: http
     behavior: classical
     format: text
-    url: https://magicrule.pages.dev/data/_shared/artifacts/Twitter_rules_0924ca0971e18745.list
-    path: ./rule-providers/MR_Twitter.list
+    url: https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Twitter.list
+    path: ./rule-providers/lite/MR_Twitter.list
     interval: 86400
   MR_Disney:
     type: http
     behavior: classical
     format: text
-    url: https://magicrule.pages.dev/data/_shared/artifacts/Disney_rules_2b565301c4989fb0.list
-    path: ./rule-providers/MR_Disney.list
+    url: https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/DisneyPlus.list
+    path: ./rule-providers/lite/MR_Disney.list
     interval: 86400
   MR_ProxyLite:
     type: http
@@ -90,18 +93,76 @@ rule-providers:
     url: https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ProxyLite.list
     path: ./rule-providers/MR_ProxyLite.list
     interval: 86400
+  MR_AIExtra:
+    type: inline
+    behavior: classical
+    payload:
+    - DOMAIN-SUFFIX,githubcopilot.com
+    - DOMAIN-SUFFIX,copilot.com
+    - DOMAIN-SUFFIX,grok.com
+    - DOMAIN-SUFFIX,grok.x.com
+    - DOMAIN-SUFFIX,chatgpt.livekit.cloud
+    - DOMAIN-SUFFIX,deepseek.com
+    - DOMAIN-SUFFIX,deepseeksvc.com
+    - DOMAIN-SUFFIX,qwen.ai
+    - DOMAIN-SUFFIX,qwenlm.ai
+    - DOMAIN-SUFFIX,ai.google.dev
+    - DOMAIN-SUFFIX,aistudio.google.com
+    - DOMAIN-SUFFIX,gemini.google
+    - DOMAIN-SUFFIX,deepmind.google
+    - DOMAIN-SUFFIX,generativeai.google
+    - DOMAIN-SUFFIX,antigravity.google
+    - DOMAIN-SUFFIX,antigravity.google.com
+    - DOMAIN-SUFFIX,flow.google
+    - DOMAIN-SUFFIX,flow.google.com
+    - DOMAIN-SUFFIX,jules.google
+    - DOMAIN-SUFFIX,jules.google.com
+    - DOMAIN-SUFFIX,labs.google
+    - DOMAIN-SUFFIX,labs.google.com
+    - DOMAIN-SUFFIX,notebook.google
+    - DOMAIN-SUFFIX,notebook.google.com
+    - DOMAIN-SUFFIX,opal.google
+    - DOMAIN-SUFFIX,opal.google.com
+    - DOMAIN-SUFFIX,stitch.withgoogle.com
+    - DOMAIN-SUFFIX,aicode.googleapis.com
+    - DOMAIN-SUFFIX,aida.googleapis.com
+    - DOMAIN-SUFFIX,aisandbox-pa.googleapis.com
+    - DOMAIN-SUFFIX,cloudcode-pa.googleapis.com
+    - DOMAIN-SUFFIX,notebooklm-pa.googleapis.com
+    - DOMAIN-SUFFIX,notebooklm.googleapis.com
+    - DOMAIN-SUFFIX,labstailwind.pa.googleapis.com
+    - DOMAIN-SUFFIX,proactivebackend-pa.googleapis.com
+    - DOMAIN-SUFFIX,robinfrontend-pa.googleapis.com
+    - DOMAIN-SUFFIX,geller-pa.googleapis.com
+    - DOMAIN,alkalicore-pa.clients6.google.com
+    - DOMAIN,alkalimakersuite-pa.clients6.google.com
+    - DOMAIN,webchannel-alkalimakersuite-pa.clients6.google.com
+    - DOMAIN,antigravity-pa.googleapis.com
+    - DOMAIN,antigravity.googleapis.com
+    - DOMAIN,appsgenaiserver-pa.clients.google.com
+    - DOMAIN,appsgenaiserver-pa.clients6.google.com
+    - DOMAIN,appsgenaiserver-pa.googleapis.com
+    - DOMAIN,cloudaicompanion.googleapis.com
+    - DOMAIN,daily-cloudcode-pa.googleapis.com
+    - DOMAIN,geminiweb-pa.clients.google.com
+    - DOMAIN,geminiweb-pa.clients6.google.com
+    - DOMAIN,copilot-telemetry-service.githubusercontent.com
+    - DOMAIN,copilot-telemetry.githubusercontent.com
+    - DOMAIN,copilot-workspace.githubnext.com
+    - DOMAIN,copilotprodattachments.blob.core.windows.net
 rules:
 - RULE-SET,MR_Lan,🎯 全球直连
-- RULE-SET,MR_Google,📢 谷歌服务
-- RULE-SET,MR_Microsoft,Ⓜ️ 微软服务
-- RULE-SET,MR_Apple,🍎 苹果服务
-- RULE-SET,MR_Telegram,📲 电报消息
+- RULE-SET,MR_AIExtra,💬 Ai平台
 - RULE-SET,MR_GlobalAI,💬 Ai平台
 - RULE-SET,MR_YouTube,📹 油管视频
 - RULE-SET,MR_NetflixDomain,🎥 奈飞视频
 - RULE-SET,MR_BiliBili,📺 哔哩哔哩
 - RULE-SET,MR_Twitter,🐦 X
 - RULE-SET,MR_Disney,🏰 迪士尼
+- RULE-SET,MR_Telegram,📲 电报消息
+- RULE-SET,MR_Google,📢 谷歌服务
+- RULE-SET,MR_Microsoft,Ⓜ️ 微软服务
+- RULE-SET,MR_Apple,🍎 苹果服务
 - RULE-SET,MR_ProxyLite,🚀 节点选择
 - GEOIP,LAN,🎯 全球直连
 - GEOIP,CN,🎯 全球直连
@@ -304,11 +365,11 @@ proxy-groups:
 - name: 🇲🇴 澳门节点
   type: select
   include-all: true
-  filter: (MO|澳门
+  filter: (MO|澳门)
 - name: 🇪🇺 欧洲节点
   type: select
   include-all: true
-  filter: '(?i)\b(AL|AD|AM|AT|AZ|BY|BE|BA|BG|HR|CY|CZ|DK|EE|FI|FR|GE|DE|GR|HU|IS|IE|IT|XK|LV|LI|LT|LU|MT|MD|MC|ME|NL|MK|NO|PL|PT|RO|RU|SM|RS|SK|SI|ES|SE|CH|TR|UA|UK|GB|VA|EU)\d*\b'
+  filter: (?i)(?:^|[^a-z0-9])(?:AL|AD|AM|AT|AZ|BY|BE|BA|BG|HR|CY|CZ|DK|EE|FI|FR|GE|DE|GR|HU|IS|IE|IT|XK|LV|LI|LT|LU|LUX|MT|MD|MC|ME|NL|MK|NO|PL|PT|RO|RU|SM|RS|SK|SI|ES|SE|CH|TR|UA|UK|GB|VA|EU)[0-9]*(?:$|[^a-z0-9])|卢森堡|Luxembourg|🇱🇺
 - name: 去广告
   type: select
   include-all: true
