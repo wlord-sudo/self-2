@@ -373,4 +373,4 @@ proxy-groups:
 - name: 去广告
   type: select
   include-all: true
-  filter: (BY|RU|IS|GF|DK|NO|FI|LU)
+  filter: (BY|RU|UK|IS|GF|DK|NO|FI|LU)
