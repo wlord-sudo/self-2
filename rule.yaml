@@ -365,7 +365,7 @@ proxy-groups:
 - name: 🇲🇴 澳门节点
   type: select
   include-all: true
-  filter: (MO|澳门)
+  filter: (MO|澳门|BN)
 - name: 🇪🇺 欧洲节点
   type: select
   include-all: true
