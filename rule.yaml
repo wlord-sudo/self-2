@@ -2,11 +2,37 @@
 # 导入“覆写”，并启用规则提供者、规则、代理组这三部分的覆写。
 # 规则来源：ACL4SSR 精简服务列表；Netflix 保留 MetaCubeX 域名 MRS。
 # 与原始大列表相比覆盖范围有所收窄，未单列域名按后续 GEOIP / MATCH 处理。
+# 微信独立分流强制 DIRECT，优先于其他服务规则。
+# AppleFlow: Siri 直连；Apple Intelligence PCC 与第三方 AI 扩展进入“💬 Ai平台”。
+# AppleFlow 源码：https://github.com/Kianuni/AppleFlow
 # AI 和 YouTube 优先于 Google / Microsoft 通用规则。
 # MR_AIExtra 为原有 AI 规则中保留的补充域名；自动更新列表仍为 http。
 # 所有代理组保留手动选择；“去广告”为原有选节点分组。
 # 欧洲支持国家缩写，另补充卢森堡中文名、Luxembourg、LUX、国旗。
 # 修复原澳门分组正则缺失右括号。
+
+# AppleFlow：Siri 相关域名避免 Fake-IP；其余条目来自上游 Mihomo 模板。
+# 注意：若客户端已有其它 fake-ip-filter，导入后请检查合并结果。
+dns:
+  fake-ip-filter:
+    - "guzzoni.apple.com"
+    - "+.guzzoni.apple.com"
+    - "+.siri.apple.com"
+    - "dejavu.apple.com"
+    - "sequoia.apple.com"
+    - "+.smoot.apple.com"
+    - "+.push.apple.com"
+    - "gspe1-ssl.ls.apple.com"
+    - "+.issuer.apple.com"
+    - "+.ropes.apple.com"
+    - "mask-api.icloud.com"
+    - "mask.icloud.com"
+    - "mask-h2.icloud.com"
+    - "+.app.apple.com"
+    - "+.apple-relay.apple.com"
+    - "+.apple-relay.cloudflare.com"
+    - "+.apple-relay.fastly-edge.com"
+    - "+.apple-relay.akamaized.net"
 
 rule-providers:
   MR_Lan:
@@ -16,6 +42,53 @@ rule-providers:
     url: https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/LocalAreaNetwork.list
     path: ./rule-providers/lite/MR_Lan.list
     interval: 86400
+  # 微信独立直连；inline 规则无需额外下载。
+  MR_WeChat:
+    type: inline
+    behavior: classical
+    payload:
+    - DOMAIN,apd-pcdnwxlogin.teg.tencent-cloud.net
+    - DOMAIN,vweixinf.tc.qq.com
+    - DOMAIN,weixin110.qq.com
+    - DOMAIN-SUFFIX,lbs.gtimg.com
+    - DOMAIN-SUFFIX,qlogo.cn
+    - DOMAIN-SUFFIX,qpic.cn
+    - DOMAIN-SUFFIX,servicewechat.com
+    - DOMAIN-SUFFIX,tenpay.com
+    - DOMAIN-SUFFIX,up-hl.3g.qq.com
+    - DOMAIN-SUFFIX,vweixinthumb.tc.qq.com
+    - DOMAIN-SUFFIX,wechat.com
+    - DOMAIN-SUFFIX,wechatlegal.net
+    - DOMAIN-SUFFIX,wechatos.net
+    - DOMAIN-SUFFIX,wechatpay.com
+    - DOMAIN-SUFFIX,weixin.com
+    - DOMAIN-SUFFIX,weixin.qq.com
+    - DOMAIN-SUFFIX,weixinbridge.com
+    - DOMAIN-SUFFIX,weixinsxy.com
+    - DOMAIN-SUFFIX,wx.gtimg.com
+    - DOMAIN-SUFFIX,wx.qq.com
+    - DOMAIN-SUFFIX,wxapp.tc.qq.com
+    - DOMAIN-SUFFIX,wxs.qq.com
+    - DOMAIN-SUFFIX,yun-hl.3g.qq.com
+  # AppleFlow 官方 Mihomo 规则：Siri 直连，PCC 和 AI 扩展走“💬 Ai平台”。
+  appleflow-siri-direct:
+    type: http
+    behavior: classical
+    interval: 86400
+    url: https://raw.githubusercontent.com/Kianuni/AppleFlow/main/rules/clash/Siri-Direct.yaml
+    path: ./rule-providers/appleflow-siri-direct.yaml
+  appleflow-pcc:
+    type: http
+    behavior: classical
+    interval: 86400
+    url: https://raw.githubusercontent.com/Kianuni/AppleFlow/main/rules/clash/Apple-PCC.yaml
+    path: ./rule-providers/appleflow-pcc.yaml
+  appleflow-ai-ext:
+    type: http
+    behavior: classical
+    interval: 86400
+    url: https://raw.githubusercontent.com/Kianuni/AppleFlow/main/rules/clash/Apple-AI-Ext.yaml
+    path: ./rule-providers/appleflow-ai-ext.yaml
   MR_Google:
     type: http
     behavior: classical
@@ -152,6 +225,10 @@ rule-providers:
     - DOMAIN,copilotprodattachments.blob.core.windows.net
 rules:
 - RULE-SET,MR_Lan,🎯 全球直连
+- RULE-SET,MR_WeChat,DIRECT
+- RULE-SET,appleflow-siri-direct,DIRECT
+- RULE-SET,appleflow-pcc,💬 Ai平台
+- RULE-SET,appleflow-ai-ext,💬 Ai平台
 - RULE-SET,MR_AIExtra,💬 Ai平台
 - RULE-SET,MR_GlobalAI,💬 Ai平台
 - RULE-SET,MR_YouTube,📹 油管视频
@@ -373,4 +450,4 @@ proxy-groups:
 - name: 去广告
   type: select
   include-all: true
-  filter: (BY|RU|UK|IS|GF|DK|NO|FI|LU)
+  filter: (?i)(?:^|[^a-z0-9])(?:AL|AD|AM|AT|AZ|BY|BE|BA|BG|HR|CY|CZ|DK|EE|FI|FR|GE|DE|GR|HU|IS|IE|IT|XK|LV|LI|LT|LU|LUX|MT|MD|MC|ME|NL|MK|NO|PL|PT|RO|RU|SM|RS|SK|SI|ES|SE|CH|TR|UA|UK|GB|VA|EU)[0-9]*(?:$|[^a-z0-9])|卢森堡|Luxembourg|🇱🇺
